@@ -26,8 +26,27 @@ let persons = [
     }
 ]
 
+app.get('/info', (request, response) => {
+    let now = Date()
+    let numOfPersons = persons.length
+    let p = persons.length > 1 ? 'people' : 'person'
+    response.send(`<h2>PhoneBook has info for ${numOfPersons} ${p}</h2><h2>${now}</h2>`)
+})
+
 app.get('/api/persons', (request, response) => {
     response.json(persons)
+})
+
+app.get('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const person = persons.find(person => person.id === id)
+
+    if (person) {
+        response.json(person)
+    } else {
+        response.statusMessage = 'Person Not Found'
+        response.status(404).end()
+    }
 })
 
 const PORT = 3001
