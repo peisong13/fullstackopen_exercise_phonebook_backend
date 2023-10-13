@@ -26,6 +26,10 @@ let persons = [
     }
 ]
 
+const genId = () => {
+    return parseInt((Math.random()*1000000000).toString())
+}
+
 app.get('/info', (request, response) => {
     let now = Date()
     let numOfPersons = persons.length
@@ -54,6 +58,33 @@ app.delete('/api/persons/:id', (request, response) => {
     persons = persons.filter(person => person.id !== id)
 
     response.status(204).end()
+})
+
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+
+    if (!body.name || !body.number) {
+        return response.status(400).json({
+            error: 'content incorrect'
+        })
+    }
+
+    if (persons.filter(person => person.name === body.name).length > 0) {
+        return response.status(400).json({
+            error: 'name must be unique'
+        })
+    }
+
+    const person = {
+        id: genId(),
+        name: body.name,
+        number: body.number
+    }
+
+    persons = persons.concat(person)
+
+    response.json(persons)
+
 })
 
 const PORT = 3001
