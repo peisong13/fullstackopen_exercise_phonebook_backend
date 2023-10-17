@@ -1,12 +1,14 @@
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
+const cors = require('cors')
 
 app.use(express.json())
 // app.use(morgan('tiny'))
 
 morgan.token('json', (req, res) => (JSON.stringify(req.body)))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :json'))
+app.use(cors())
 
 let persons = [
     {
@@ -88,11 +90,11 @@ app.post('/api/persons', (request, response) => {
 
     persons = persons.concat(person)
 
-    response.json(persons)
+    response.json(person) // return person instead of persons to work with frontend
 
 })
 
-const PORT = 3001
+const PORT = 9000 // as tencent cloud serverless service requests
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
