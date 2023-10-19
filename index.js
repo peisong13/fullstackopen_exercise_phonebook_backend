@@ -2,6 +2,7 @@ const express = require('express')
 const morgan = require('morgan')
 const app = express()
 const cors = require('cors')
+const Person = require('./models/person')
 
 app.use(cors())
 app.use(express.json())
@@ -47,19 +48,24 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person.find({}).then(result => {
+        response.json(result)
+    })
 })
 
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
+    // const person = persons.find(person => person.id === id)
 
-    if (person) {
+    // if (person) {
+    //     response.json(person)
+    // } else {
+    //     response.statusMessage = 'Person Not Found'
+    //     response.status(404).end()
+    // }
+    Person.findByID(request.params.id).then(person => {
         response.json(person)
-    } else {
-        response.statusMessage = 'Person Not Found'
-        response.status(404).end()
-    }
+    }) // TODO: catch?
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -84,16 +90,16 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    const person = {
-        id: genId(),
+    const person = new Person({
         name: body.name,
         number: body.number
-    }
+    })
 
     persons = persons.concat(person)
 
-    response.json(person) // return person instead of persons to work with frontend
-
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
 })
 
 const PORT = 9000 // as tencent cloud serverless service requests
