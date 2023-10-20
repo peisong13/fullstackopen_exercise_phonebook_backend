@@ -1,5 +1,4 @@
 require('dotenv').config()
-
 const mongoose = require('mongoose')
 // const validate = require('mongoose-validator').validate
 
@@ -8,7 +7,7 @@ const url = process.env.DB_url
 console.log(`connecting to ${url}...`)
 
 mongoose.connect(url)
-    .then(result => {
+    .then(() => {
         console.log('Connected!')
     })
     .catch(error => {
