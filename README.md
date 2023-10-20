@@ -1,3 +1,3 @@
 ## link
 
-https://service-rrir0b3a-1302991192.gz.apigw.tencentcs.com/release/
+https://service-9k6ko8i2-1302991192.gz.apigw.tencentcs.com/
